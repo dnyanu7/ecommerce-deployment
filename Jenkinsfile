@@ -125,7 +125,7 @@ pipeline {
 
     stage('Build Backend') {
       steps {
-        dir('backend/palmonas-backend') {
+        dir('backend/backend') {
           sh './mvnw clean package -DskipTests || mvn clean package -DskipTests'
         }
       }
