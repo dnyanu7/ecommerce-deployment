@@ -12,8 +12,9 @@ pipeline {
     stage('Clone Frontend Repo') {
       steps {
         dir('frontend') {
-          sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
-            git url: 'git@github.com:abhi1231/navyaraga-ui.git', branch: 'main'
+          git branch: 'main',
+              credentialsId: env.SSH_CREDENTIALS_ID,
+              url: 'git@github.com:abhi1231/navyaraga-ui.git'
           }
         }
       }
@@ -22,8 +23,9 @@ pipeline {
     stage('Clone Backend Repo') {
       steps {
         dir('backend') {
-          sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
-            git url: 'git@github.com:abhi1231/palmonas-reimagined-react.git', branch: 'main'
+          git branch: 'main',
+              credentialsId: env.SSH_CREDENTIALS_ID,
+              url: 'git@github.com:abhi1231/palmonas-reimagined-react.git'
           }
         }
       }
