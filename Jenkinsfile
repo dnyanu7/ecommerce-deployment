@@ -107,7 +107,7 @@ pipeline {
     stage('Clone Backend Repo') {
       steps {
         dir('backend') {
-          git branch: 'main',
+          git branch: 'rudra_dev_cache',
               credentialsId: env.SSH_CREDENTIALS_ID,
               url: 'git@github.com:abhi1231/palmonas-reimagined-react.git'
         }
@@ -136,7 +136,8 @@ pipeline {
         sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
           sh "ssh $REMOTE_USER@$REMOTE_HOST 'mkdir -p $REMOTE_DIR'"
           sh "scp backend/target/*.jar $REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/app.jar"
-          sh "scp -r frontend/build $REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/frontend"
+          // sh "scp -r frontend/build $REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/frontend"
+          sh "scp -r frontend/dist $REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/frontend"
         }
       }
     }
