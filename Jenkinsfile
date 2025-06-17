@@ -97,7 +97,7 @@ pipeline {
     stage('Clone Frontend Repo') {
       steps {
         dir('frontend') {
-          git branch: 'main',
+          git branch: 'ak_dev_cache',
               credentialsId: env.SSH_CREDENTIALS_ID,
               url: 'git@github.com:abhi1231/navyaraga-ui.git'
         }
