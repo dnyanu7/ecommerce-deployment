@@ -166,6 +166,19 @@ pipeline {
         }
       }
     }
+    
+    stage('Start Frontend Server') {
+      steps {
+        sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
+          sh """
+            ssh $REMOTE_USER@$REMOTE_HOST '
+              pkill -f "npx serve" || true
+              nohup npx serve -s $REMOTE_DIR/frontend -l 3000 > $REMOTE_DIR/frontend-logs.txt 2>&1 &
+            '
+          """
+        }
+      }
+    }
 
     stage('Restart Spring Boot App') {
       steps {
