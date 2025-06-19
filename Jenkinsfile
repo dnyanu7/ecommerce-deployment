@@ -157,15 +157,34 @@ pipeline {
       }
     }
 
+    // stage('Deploy to Server') {
+    //   steps {
+    //     sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
+    //       sh "ssh $REMOTE_USER@$REMOTE_HOST 'mkdir -p $REMOTE_DIR'"
+    //       sh "scp backend/backend/target/*.jar $REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/app.jar"
+    //       sh "scp -r frontend/dist $REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/frontend"
+    //     }
+    //   }
+    // }
+    
     stage('Deploy to Server') {
-      steps {
-        sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
-          sh "ssh $REMOTE_USER@$REMOTE_HOST 'mkdir -p $REMOTE_DIR'"
-          sh "scp backend/backend/target/*.jar $REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/app.jar"
-          sh "scp -r frontend/dist $REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/frontend"
-        }
-      }
+  steps {
+    sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
+      sh "ssh $REMOTE_USER@$REMOTE_HOST 'mkdir -p $REMOTE_DIR'"
+      
+      // Clear old frontend and backend artifacts
+      sh "ssh $REMOTE_USER@$REMOTE_HOST 'rm -rf $REMOTE_DIR/frontend'"
+      sh "ssh $REMOTE_USER@$REMOTE_HOST 'rm -f $REMOTE_DIR/app.jar'"
+
+      // Deploy new backend jar
+      sh "scp backend/backend/target/*.jar $REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/app.jar"
+      
+      // Deploy new frontend build
+      sh "scp -r frontend/dist $REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/frontend"
     }
+  }
+}
+
     
     stage('Start Frontend Server') {
       steps {
