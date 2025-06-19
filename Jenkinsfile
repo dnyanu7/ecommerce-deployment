@@ -120,7 +120,7 @@ pipeline {
     stage('Clone Backend Repo') {
       steps {
         dir('backend') {
-          git branch: 'rudra_dev_cache',
+          git branch: 'SK_Production',
               credentialsId: env.SSH_CREDENTIALS_ID,
               url: 'git@github.com:abhi1231/palmonas-reimagined-react.git'
         }
