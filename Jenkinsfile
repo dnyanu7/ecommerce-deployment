@@ -95,7 +95,7 @@ pipeline {
     PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
 
     REMOTE_USER = 'ubuntu'
-    REMOTE_HOST = '192.168.1.131'
+    REMOTE_HOST = '192.168.1.123'
     REMOTE_DIR = '/home/ubuntu/ecommerce-app'
     SSH_CREDENTIALS_ID = 'github-ssh-key'
   }
