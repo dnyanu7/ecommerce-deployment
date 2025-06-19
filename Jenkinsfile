@@ -172,7 +172,7 @@ pipeline {
         sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
           sh """
             ssh $REMOTE_USER@$REMOTE_HOST '
-              pkill -f "java -jar" || true
+              sudo pkill -f "java -jar" || true
               nohup java -jar $REMOTE_DIR/app.jar > $REMOTE_DIR/logs.txt 2>&1 &
             '
           """
