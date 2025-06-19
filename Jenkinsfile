@@ -181,19 +181,37 @@ pipeline {
       }
     }
 
+  //   stage('Restart Spring Boot App') {
+  //     steps {
+  //       sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
+  //         sh """
+  //           ssh $REMOTE_USER@$REMOTE_HOST '
+  //             sudo pkill -f "java -jar" || true
+  //             nohup java -jar $REMOTE_DIR/app.jar > $REMOTE_DIR/logs.txt 2>&1 &
+  //           '
+  //         """
+  //       }
+  //     }
+  //   }
+  // }
+    
     stage('Restart Spring Boot App') {
-      steps {
-        sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
-          sh """
-            ssh $REMOTE_USER@$REMOTE_HOST '
-              sudo pkill -f "java -jar" || true
-              nohup java -jar $REMOTE_DIR/app.jar > $REMOTE_DIR/logs.txt 2>&1 &
-            '
-          """
-        }
-      }
+  steps {
+    sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
+      sh """
+        ssh $REMOTE_USER@$REMOTE_HOST '
+          PID=\$(lsof -ti:8090)
+          if [ ! -z "\$PID" ]; then
+            echo "Killing process on port 8090: \$PID"
+            kill -9 \$PID
+          fi
+          nohup java -jar $REMOTE_DIR/app.jar > $REMOTE_DIR/logs.txt 2>&1 &
+        '
+      """
     }
   }
+}
+
 
   post {
     success {
