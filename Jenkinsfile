@@ -145,6 +145,17 @@ pipeline {
         }
       }
     }
+    stage('Debug: Show Jenkins Public Key') {
+      steps {
+        sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
+          sh '''
+            echo "----- Jenkins Public Key -----"
+            ssh-add -L
+            echo "------------------------------"
+          '''
+        }
+      }
+    }
 
     stage('Deploy to Server') {
       steps {
