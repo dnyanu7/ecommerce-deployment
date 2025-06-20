@@ -47,7 +47,8 @@ pipeline {
       steps {
         dir('frontend') {
           sh 'npm install'
-          sh 'npm run build'
+          sh 'node --max-old-space-size=2048 $(which npm) run build'
+
         }
       }
     }
