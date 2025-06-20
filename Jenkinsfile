@@ -111,7 +111,8 @@ pipeline {
             ssh $REMOTE_USER@$REMOTE_HOST '
             
              sudo pkill -f "npx serve" || true
-              nohup npx serve -s $REMOTE_DIR/frontend -l 4000 > $REMOTE_DIR/frontend-logs.txt 2>&1 &
+              // nohup npx serve -s $REMOTE_DIR/frontend -l 4000 > $REMOTE_DIR/frontend-logs.txt 2>&1 &
+              nohup /usr/bin/serve -s $REMOTE_DIR/frontend -l 4000 > $REMOTE_DIR/frontend-logs.txt 2>&1 &
             '
           """
         }
