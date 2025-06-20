@@ -130,17 +130,18 @@ stage('Start Frontend Server') {
           echo "📂 Navigating to app directory..."
           cd $REMOTE_DIR || exit 1
 
-          echo "🚀 Starting serve with nohup..."
-          nohup /snap/bin/serve -s $REMOTE_DIR/frontend -l 4000 > $REMOTE_DIR/frontend-logs.txt 2>&1 &
+          echo "🚀 Starting serve with nohup on port 4000..."
+          nohup /snap/bin/serve -d frontend -l 4000 > frontend-logs.txt 2>&1 < /dev/null &
 
           sleep 3
           echo "✅ Serve command executed"
-          ps aux | grep serve
+          pgrep -af serve || echo "❗ Serve process not found"
         '
       """
     }
   }
 }
+
 
 
   //   stage('Restart Spring Boot App') {
