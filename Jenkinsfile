@@ -131,7 +131,7 @@ stage('Start Frontend Server') {
           cd $REMOTE_DIR || exit 1
 
           echo "🚀 Starting serve with nohup on port 4000..."
-          nohup /snap/bin/serve -d frontend -l 4000 > frontend-logs.txt 2>&1 < /dev/null &
+          nohup /snap/bin/serve -d frontend -l 4000 --no-ssl > frontend-logs.txt 2>&1 < /dev/null &
 
           sleep 3
           echo "✅ Serve command executed"
