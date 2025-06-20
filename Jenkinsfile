@@ -104,20 +104,20 @@ pipeline {
 }
 
     
-    stage('Start Frontend Server') {
-      steps {
-        sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
-          sh """
-            ssh $REMOTE_USER@$REMOTE_HOST '
+    // stage('Start Frontend Server') {
+    //   steps {
+    //     sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
+    //       sh """
+    //         ssh $REMOTE_USER@$REMOTE_HOST '
             
-             sudo pkill -f "npx serve" || true
-              // nohup npx serve -s $REMOTE_DIR/frontend -l 4000 > $REMOTE_DIR/frontend-logs.txt 2>&1 &
-             setsid /snap/bin/serve -s frontend -l 4000 > frontend-logs.txt 2>&1 < /dev/null &
-            '
-          """
-        }
-      }
-    }
+    //          sudo pkill -f "npx serve" || true
+    //           // nohup npx serve -s $REMOTE_DIR/frontend -l 4000 > $REMOTE_DIR/frontend-logs.txt 2>&1 &
+    //          setsid /snap/bin/serve -s frontend -l 4000 > frontend-logs.txt 2>&1 < /dev/null &
+    //         '
+    //       """
+    //     }
+    //   }
+    // }
 
 // stage('Start Frontend Server') {
 //   steps {
@@ -141,6 +141,29 @@ pipeline {
 //     }
 //   }
 // }
+    stage('Start Frontend Server') {
+  steps {
+    sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
+      sh """
+        ssh $REMOTE_USER@$REMOTE_HOST '
+          echo "🧹 Killing existing serve process..."
+          pkill -f "serve" || true
+
+          echo "📂 Changing to app directory..."
+          cd $REMOTE_DIR || exit 1
+
+          echo "🚀 Starting frontend using serve..."
+          setsid /snap/bin/serve -s frontend -l 4000 --no-ssl > frontend-logs.txt 2>&1 < /dev/null &
+          
+          sleep 3
+          echo "✅ Serve launched on port 4000"
+          pgrep -af serve || echo "❗ Serve not found"
+        '
+      """
+    }
+  }
+}
+
 
 
   //   stage('Restart Spring Boot App') {
