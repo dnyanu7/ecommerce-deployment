@@ -126,7 +126,12 @@ stage('Start Frontend Server') {
         echo "🧹 Killing any running serve process..."
         sudo pkill -f serve || true
 
-        echo "🚀 Starting serve with nohup on port 4000 (HTTP only)..."
+        echo "📁 Directory listing:"
+        ls -l /root/Navyaraaga/frontend || echo "❗ Frontend folder missing"
+
+        echo "🚀 COMMAND TO BE RUN:"
+        echo "/snap/bin/serve -d /root/Navyaraaga/frontend -l 4000 --no-ssl"
+
         nohup /snap/bin/serve -d /root/Navyaraaga/frontend -l 4000 --no-ssl > /root/Navyaraaga/frontend-logs.txt 2>&1 < /dev/null &
 
         sleep 3
@@ -136,6 +141,7 @@ stage('Start Frontend Server') {
     }
   }
 }
+
 
   //   stage('Restart Spring Boot App') {
   //     steps {
