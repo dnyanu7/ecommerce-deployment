@@ -12,7 +12,7 @@ pipeline {
 
     REMOTE_USER = 'root'
     REMOTE_HOST = '103.174.102.148'
-    REMOTE_DIR = '/root/Navyaraaga'
+    REMOTE_DIR = '/home/jenkins/Navyaraaga'
     SSH_CREDENTIALS_ID = 'github-ssh-key'
   }
 
@@ -162,9 +162,9 @@ stage('Start Frontend Server') {
     sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
       sh """
         ssh $REMOTE_USER@$REMOTE_HOST '
-          PID=\$(lsof -ti:8090)
+          PID=\$(lsof -ti:8081)
           if [ ! -z "\$PID" ]; then
-            echo "Killing process on port 8090: \$PID"
+            echo "Killing process on port 8081: \$PID"
             kill -9 \$PID
           fi
           nohup java -jar $REMOTE_DIR/app.jar > $REMOTE_DIR/logs.txt 2>&1 &
