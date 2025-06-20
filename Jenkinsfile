@@ -112,7 +112,7 @@ pipeline {
             
              sudo pkill -f "npx serve" || true
               // nohup npx serve -s $REMOTE_DIR/frontend -l 4000 > $REMOTE_DIR/frontend-logs.txt 2>&1 &
-              nohup /usr/bin/serve -s $REMOTE_DIR/frontend -l 4000 > $REMOTE_DIR/frontend-logs.txt 2>&1 &
+              nohup /snap/bin/serve -s $REMOTE_DIR/frontend -l 4000 > $REMOTE_DIR/frontend-logs.txt 2>&1 &
             '
           """
         }
