@@ -11,8 +11,8 @@ pipeline {
     PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
 
     REMOTE_USER = 'ubuntu'
-    REMOTE_HOST = '192.168.1.123'
-    REMOTE_DIR = '/home/ubuntu/ecommerce-app'
+    REMOTE_HOST = '103.174.102.148'
+    REMOTE_DIR = '/home/ubuntu/Navyaraaga'
     SSH_CREDENTIALS_ID = 'github-ssh-key'
   }
 
@@ -26,7 +26,7 @@ pipeline {
     stage('Clone Frontend Repo') {
       steps {
         dir('frontend') {
-          git branch: 'Ak_dev',
+          git branch: 'Dnyanesh_dev',
               credentialsId: env.SSH_CREDENTIALS_ID,
               url: 'git@github.com:abhi1231/navyaraga-ui.git'
         }
@@ -36,7 +36,7 @@ pipeline {
     stage('Clone Backend Repo') {
       steps {
         dir('backend') {
-          git branch: 'SK_Production',
+          git branch: 'dnyanesh_dev',
               credentialsId: env.SSH_CREDENTIALS_ID,
               url: 'git@github.com:abhi1231/palmonas-reimagined-react.git'
         }
