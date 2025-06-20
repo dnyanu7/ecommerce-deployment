@@ -10,9 +10,9 @@ pipeline {
     JAVA_HOME = "${tool 'jdk20'}"
     PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
 
-    REMOTE_USER = 'jenkins'
+    REMOTE_USER = 'root'
     REMOTE_HOST = '103.174.102.148'
-    REMOTE_DIR = '/home/ubuntu/Navyaraaga'
+    REMOTE_DIR = '/root/Navyaraaga'
     SSH_CREDENTIALS_ID = 'github-ssh-key'
   }
 
