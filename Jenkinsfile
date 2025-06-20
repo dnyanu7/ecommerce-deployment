@@ -104,43 +104,43 @@ pipeline {
 }
 
     
-    // stage('Start Frontend Server') {
-    //   steps {
-    //     sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
-    //       sh """
-    //         ssh $REMOTE_USER@$REMOTE_HOST '
+    stage('Start Frontend Server') {
+      steps {
+        sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
+          sh """
+            ssh $REMOTE_USER@$REMOTE_HOST '
             
-    //          sudo pkill -f "npx serve" || true
-    //           // nohup npx serve -s $REMOTE_DIR/frontend -l 4000 > $REMOTE_DIR/frontend-logs.txt 2>&1 &
-    //          setsid /snap/bin/serve -s frontend -l 4000 > frontend-logs.txt 2>&1 < /dev/null &
-    //         '
-    //       """
-    //     }
-    //   }
-    // }
-
-stage('Start Frontend Server') {
-  steps {
-    sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
-      sh """
-        echo "🧹 Killing any running serve process..."
-        sudo pkill -f serve || true
-
-        echo "📁 Directory listing:"
-        ls -l /root/Navyaraaga/frontend || echo "❗ Frontend folder missing"
-
-        echo "🚀 COMMAND TO BE RUN:"
-        echo "/snap/bin/serve -d /root/Navyaraaga/frontend -l 4000 --no-ssl"
-
-        nohup /snap/bin/serve -d /root/Navyaraaga/frontend -l 4000 --no-ssl > /root/Navyaraaga/frontend-logs.txt 2>&1 < /dev/null &
-
-        sleep 3
-        echo "✅ Serve command executed"
-        pgrep -af serve || echo "❗ Serve process not found"
-      """
+             sudo pkill -f "npx serve" || true
+              // nohup npx serve -s $REMOTE_DIR/frontend -l 4000 > $REMOTE_DIR/frontend-logs.txt 2>&1 &
+             setsid /snap/bin/serve -s frontend -l 4000 > frontend-logs.txt 2>&1 < /dev/null &
+            '
+          """
+        }
+      }
     }
-  }
-}
+
+// stage('Start Frontend Server') {
+//   steps {
+//     sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
+//       sh """
+//         echo "🧹 Killing any running serve process..."
+//         sudo pkill -f serve || true
+
+//         echo "📁 Directory listing:"
+//         ls -l /root/Navyaraaga/frontend || echo "❗ Frontend folder missing"
+
+//         echo "🚀 COMMAND TO BE RUN:"
+//         echo "/snap/bin/serve -d /root/Navyaraaga/frontend -l 4000 --no-ssl"
+
+//         nohup /snap/bin/serve -d /root/Navyaraaga/frontend -l 4000 --no-ssl > /root/Navyaraaga/frontend-logs.txt 2>&1 < /dev/null &
+
+//         sleep 3
+//         echo "✅ Serve command executed"
+//         pgrep -af serve || echo "❗ Serve process not found"
+//       """
+//     }
+//   }
+// }
 
 
   //   stage('Restart Spring Boot App') {
