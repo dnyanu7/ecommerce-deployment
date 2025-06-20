@@ -104,34 +104,34 @@ pipeline {
 }
 
     
-    stage('Start Frontend Server') {
-      steps {
-        sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
-          sh """
-            ssh $REMOTE_USER@$REMOTE_HOST '
+    // stage('Start Frontend Server') {
+    //   steps {
+    //     sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
+    //       sh """
+    //         ssh $REMOTE_USER@$REMOTE_HOST '
             
-             sudo pkill -f "npx serve" || true
-              // nohup npx serve -s $REMOTE_DIR/frontend -l 4000 > $REMOTE_DIR/frontend-logs.txt 2>&1 &
-             setsid /snap/bin/serve -s frontend -l 4000 > frontend-logs.txt 2>&1 < /dev/null &
-            '
-          """
-        }
-      }
-    }
+    //          sudo pkill -f "npx serve" || true
+    //           // nohup npx serve -s $REMOTE_DIR/frontend -l 4000 > $REMOTE_DIR/frontend-logs.txt 2>&1 &
+    //          setsid /snap/bin/serve -s frontend -l 4000 > frontend-logs.txt 2>&1 < /dev/null &
+    //         '
+    //       """
+    //     }
+    //   }
+    // }
 
-//     stage('Start Frontend Server') {
-//   steps {
-//     sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
-//       sh """
-//         ssh $REMOTE_USER@$REMOTE_HOST '
-//           sudo pkill -f "serve" || true
-//           cd $REMOTE_DIR
-//           setsid /snap/bin/serve -s $REMOTE_DIR/frontend -l 4000 > $REMOTE_DIR/frontend-logs.txt 2>&1 < /dev/null &
-//         '
-//       """
-//     }
-//   }
-// }
+    stage('Start Frontend Server') {
+  steps {
+    sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
+      sh """
+        ssh $REMOTE_USER@$REMOTE_HOST '
+          sudo pkill -f "serve" || true
+          cd $REMOTE_DIR
+          setsid /snap/bin/serve -s $REMOTE_DIR/frontend -l 4000 > $REMOTE_DIR/frontend-logs.txt 2>&1 < /dev/null &
+        '
+      """
+    }
+  }
+}
 
   //   stage('Restart Spring Boot App') {
   //     steps {
