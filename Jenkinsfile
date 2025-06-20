@@ -124,13 +124,10 @@ stage('Start Frontend Server') {
     sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
       sh """
         echo "🧹 Killing any running serve process..."
-        pkill -f "serve" || true
+        sudo pkill -f serve || true
 
-        echo "📂 Navigating to app directory..."
-        cd $REMOTE_DIR || exit 1
-
-        echo "🚀 Starting serve from local node_modules on port 4000..."
-        nohup ./node_modules/.bin/serve -s frontend -l 4000 > frontend-logs.txt 2>&1 < /dev/null &
+        echo "🚀 Starting serve with nohup on port 4000 (HTTP only)..."
+        nohup /snap/bin/serve -s /root/Navyaraaga/frontend -l 4000 --no-ssl > /root/Navyaraaga/frontend-logs.txt 2>&1 < /dev/null &
 
         sleep 3
         echo "✅ Serve command executed"
@@ -139,6 +136,7 @@ stage('Start Frontend Server') {
     }
   }
 }
+
 
   //   stage('Restart Spring Boot App') {
   //     steps {
