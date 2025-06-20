@@ -119,19 +119,30 @@ pipeline {
     //   }
     // }
 
-    stage('Start Frontend Server') {
+   stage('Start Frontend Server') {
   steps {
     sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
       sh """
         ssh $REMOTE_USER@$REMOTE_HOST '
+          echo "🧹 Killing any running serve process..."
           sudo pkill -f "serve" || true
-          cd $REMOTE_DIR
+
+          echo "📂 Navigating to app directory..."
+          cd $REMOTE_DIR || exit 1
+
+          echo "🚀 Starting serve with setsid..."
+          which serve || echo "❗ 'serve' not found in PATH"
           setsid /snap/bin/serve -s $REMOTE_DIR/frontend -l 4000 > $REMOTE_DIR/frontend-logs.txt 2>&1 < /dev/null &
+          
+          sleep 2
+          echo "✅ Serve command executed"
+          ps aux | grep serve
         '
       """
     }
   }
 }
+
 
   //   stage('Restart Spring Boot App') {
   //     steps {
