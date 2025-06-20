@@ -127,7 +127,7 @@ stage('Start Frontend Server') {
         sudo pkill -f serve || true
 
         echo "🚀 Starting serve with nohup on port 4000 (HTTP only)..."
-        nohup /snap/bin/serve -s /root/Navyaraaga/frontend -l 4000 --no-ssl > /root/Navyaraaga/frontend-logs.txt 2>&1 < /dev/null &
+        nohup /snap/bin/serve -d /root/Navyaraaga/frontend -l 4000 --no-ssl > /root/Navyaraaga/frontend-logs.txt 2>&1 < /dev/null &
 
         sleep 3
         echo "✅ Serve command executed"
@@ -136,7 +136,6 @@ stage('Start Frontend Server') {
     }
   }
 }
-
 
   //   stage('Restart Spring Boot App') {
   //     steps {
