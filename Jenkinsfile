@@ -92,53 +92,62 @@ pipeline {
     }
   }
 }
-
     
-    // stage('Start Frontend Server') {
-    //   steps {
-    //     sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
-    //       sh """
-    //         ssh $REMOTE_USER@$REMOTE_HOST '
-            
-    //          sudo pkill -f "npx serve" || true
-    //           // nohup npx serve -s $REMOTE_DIR/frontend -l 4000 > $REMOTE_DIR/frontend-logs.txt 2>&1 &
-    //          setsid /snap/bin/serve -s frontend -l 4000 > frontend-logs.txt 2>&1 < /dev/null &
-    //         '
-    //       """
-    //     }
-    //   }
-    // }
-
 stage('Start Frontend Server') {
   steps {
     sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
       sh """
-        echo "🧹 Killing old serve process (if any)..."
-        pkill -f 'serve.*4000' || echo "No existing process on 4000"
+        echo "🧹 Killing any old 'serve' process on port 4000..."
+        pkill -f 'serve.*4000' || echo "No existing serve process found"
 
-        echo "🗑️ Removing old logs and frontend files..."
-        rm -f /home/jenkins/Navyaraaga/frontend-logs.txt
-        rm -rf /home/jenkins/Navyaraaga/served-frontend
+        echo "🗑️ Removing old frontend logs..."
+        rm -f /home/jenkins/frontend-logs.txt
 
-        echo "📁 Creating folder for served frontend..."
-        mkdir -p /home/jenkins/Navyaraaga/served-frontend
-
-        echo "📦 Copying new frontend build..."
-        cp -r /home/jenkins/Navyaraaga/frontend/* /home/jenkins/Navyaraaga/served-frontend/
-
-        echo "🚀 Starting serve on port 4000..."
-        nohup /snap/bin/serve -d /home/jenkins/Navyaraaga/served-frontend -l 4000 --no-ssl > /home/jenkins/Navyaraaga/frontend-logs.txt 2>&1 < /dev/null &
+        echo "🚀 Starting serve on port 4000 from 'frontend' folder..."
+        nohup /snap/bin/serve -d /home/jenkins/Navyaraaga/frontend -l 4000 --no-ssl > /home/jenkins/frontend-logs.txt 2>&1 < /dev/null &
 
         sleep 3
 
-        echo "📡 Checking serve process..."
+        echo "📡 Checking if serve is running..."
         pgrep -af 'serve' || echo "❗ Serve process not running"
 
-        echo "✅ Frontend should now be live at http://103.174.102.148:4000"
+        echo "✅ Frontend should now be accessible at: http://103.174.102.148:4000"
       """
     }
   }
 }
+
+
+// stage('Start Frontend Server') {
+//   steps {
+//     sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
+//       sh """
+//         echo "🧹 Killing old serve process (if any)..."
+//         pkill -f 'serve.*4000' || echo "No existing process on 4000"
+
+//         echo "🗑️ Removing old logs and frontend files..."
+//         rm -f /home/jenkins/Navyaraaga/frontend-logs.txt
+//         rm -rf /home/jenkins/Navyaraaga/served-frontend
+
+//         echo "📁 Creating folder for served frontend..."
+//         mkdir -p /home/jenkins/Navyaraaga/served-frontend
+
+//         echo "📦 Copying new frontend build..."
+//         cp -r /home/jenkins/Navyaraaga/frontend/* /home/jenkins/Navyaraaga/served-frontend/
+
+//         echo "🚀 Starting serve on port 4000..."
+//         nohup /snap/bin/serve -d /home/jenkins/Navyaraaga/served-frontend -l 4000 --no-ssl > /home/jenkins/Navyaraaga/frontend-logs.txt 2>&1 < /dev/null &
+
+//         sleep 3
+
+//         echo "📡 Checking serve process..."
+//         pgrep -af 'serve' || echo "❗ Serve process not running"
+
+//         echo "✅ Frontend should now be live at http://103.174.102.148:4000"
+//       """
+//     }
+//   }
+// }
 
 
     
