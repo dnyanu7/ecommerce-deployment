@@ -141,23 +141,15 @@ pipeline {
 //     }
 //   }
 // }
-    stage('Start Frontend Server') {
+    
+stage('Start Frontend (serve)') {
   steps {
     sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
       sh """
         ssh $REMOTE_USER@$REMOTE_HOST '
-          echo "🧹 Killing existing serve process..."
-          pkill -f "serve" || true
-
-          echo "📂 Changing to app directory..."
-          cd $REMOTE_DIR || exit 1
-
-          echo "🚀 Starting frontend using serve..."
-          setsid /snap/bin/serve -s frontend -l 4000 --no-ssl > frontend-logs.txt 2>&1 < /dev/null &
-          
-          sleep 3
-          echo "✅ Serve launched on port 4000"
-          pgrep -af serve || echo "❗ Serve not found"
+          cd $REMOTE_DIR/frontend &&
+          npm install -g serve &&
+          nohup serve -s . -l 3000 > serve.log 2>&1 &
         '
       """
     }
