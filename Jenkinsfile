@@ -109,43 +109,52 @@ pipeline {
     //   }
     // }
 
-// stage('Start Frontend Server') {
-//   steps {
-//     sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
-//       sh """
-//         echo "🧹 Killing any running serve process..."
-//         sudo pkill -f serve || true
-
-//         echo "📁 Directory listing:"
-//         ls -l /root/Navyaraaga/frontend || echo "❗ Frontend folder missing"
-
-//         echo "🚀 COMMAND TO BE RUN:"
-//         echo "/snap/bin/serve -d /root/Navyaraaga/frontend -l 4000 --no-ssl"
-
-//         nohup /snap/bin/serve -d /root/Navyaraaga/frontend -l 4000 --no-ssl > /root/Navyaraaga/frontend-logs.txt 2>&1 < /dev/null &
-
-//         sleep 3
-//         echo "✅ Serve command executed"
-//         pgrep -af serve || echo "❗ Serve process not found"
-//       """
-//     }
-//   }
-// }
-    
-stage('Start Frontend (serve)') {
+stage('Start Frontend Server') {
   steps {
     sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
       sh """
-        ssh $REMOTE_USER@$REMOTE_HOST '
-          cd $REMOTE_DIR/frontend &&
-          npm install -g serve &&
-          nohup serve -s . -l 4000 > serve.log 2>&1 &
-          exit
-        '
+        echo "🧹 Killing any old serve process (if any)..."
+        pkill -f 'serve.*4000' || echo "No existing process on 4000"
+
+        echo "🗑️ Removing old logs and frontend files..."
+        rm -f /root/Navyaraaga/frontend-logs.txt
+        rm -rf /root/Navyaraaga/frontend
+
+        echo "📁 Creating frontend folder..."
+        mkdir -p /root/Navyaraaga/frontend
+
+        echo "📦 Copying new frontend build to /root/Navyaraaga/frontend..."
+        cp -r /home/jenkins/Navyaraaga/frontend/dist/* /root/Navyaraaga/frontend/
+
+        echo "🚀 Starting frontend using serve on port 4000..."
+        nohup /snap/bin/serve -d /root/Navyaraaga/frontend -l 4000 --no-ssl > /root/Navyaraaga/frontend-logs.txt 2>&1 < /dev/null &
+
+        sleep 3
+
+        echo "📡 Running processes:"
+        pgrep -af 'serve' || echo "❗ No serve process found"
+
+        echo "✅ Frontend should now be accessible at http://103.174.102.148:4000"
       """
     }
   }
 }
+
+    
+// stage('Start Frontend (serve)') {
+//   steps {
+//     sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
+//       sh """
+//         ssh $REMOTE_USER@$REMOTE_HOST '
+//           cd $REMOTE_DIR/frontend &&
+//           npm install -g serve &&
+//           nohup serve -s . -l 4000 > serve.log 2>&1 &
+//           exit
+//         '
+//       """
+//     }
+//   }
+// }
 
 
 
