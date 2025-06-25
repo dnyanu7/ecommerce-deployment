@@ -124,7 +124,7 @@ stage('Start Frontend Server') {
         mkdir -p /home/jenkins/Navyaraaga/served-frontend
 
         echo "📦 Copying new frontend build..."
-        cp -r /home/jenkins/Navyaraaga/frontend/dist/* /home/jenkins/Navyaraaga/served-frontend/
+        cp -r /home/jenkins/Navyaraaga/frontend/* /home/jenkins/Navyaraaga/served-frontend/
 
         echo "🚀 Starting serve on port 4000..."
         nohup /snap/bin/serve -d /home/jenkins/Navyaraaga/served-frontend -l 4000 --no-ssl > /home/jenkins/Navyaraaga/frontend-logs.txt 2>&1 < /dev/null &
