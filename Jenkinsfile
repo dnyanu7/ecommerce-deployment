@@ -74,16 +74,6 @@ pipeline {
         }
       }
     }
-
-    // stage('Deploy to Server') {
-    //   steps {
-    //     sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
-    //       sh "ssh $REMOTE_USER@$REMOTE_HOST 'mkdir -p $REMOTE_DIR'"
-    //       sh "scp backend/backend/target/*.jar $REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/app.jar"
-    //       sh "scp -r frontend/dist $REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/frontend"
-    //     }
-    //   }
-    // }
     
     stage('Deploy to Server') {
   steps {
@@ -150,6 +140,7 @@ stage('Start Frontend (serve)') {
           cd $REMOTE_DIR/frontend &&
           npm install -g serve &&
           nohup serve -s . -l 4000 > serve.log 2>&1 &
+          exit
         '
       """
     }
