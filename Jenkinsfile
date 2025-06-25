@@ -149,7 +149,7 @@ stage('Start Frontend (serve)') {
         ssh $REMOTE_USER@$REMOTE_HOST '
           cd $REMOTE_DIR/frontend &&
           npm install -g serve &&
-          nohup serve -s . -l 3000 > serve.log 2>&1 &
+          nohup serve -s . -l 4000 > serve.log 2>&1 &
         '
       """
     }
