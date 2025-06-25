@@ -113,32 +113,33 @@ stage('Start Frontend Server') {
   steps {
     sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
       sh """
-        echo "🧹 Killing any old serve process (if any)..."
+        echo "🧹 Killing old serve process (if any)..."
         pkill -f 'serve.*4000' || echo "No existing process on 4000"
 
         echo "🗑️ Removing old logs and frontend files..."
-        rm -f /root/Navyaraaga/frontend-logs.txt
-        rm -rf /root/Navyaraaga/frontend
+        rm -f /home/jenkins/Navyaraaga/frontend-logs.txt
+        rm -rf /home/jenkins/Navyaraaga/served-frontend
 
-        echo "📁 Creating frontend folder..."
-        mkdir -p /root/Navyaraaga/frontend
+        echo "📁 Creating folder for served frontend..."
+        mkdir -p /home/jenkins/Navyaraaga/served-frontend
 
-        echo "📦 Copying new frontend build to /root/Navyaraaga/frontend..."
-        cp -r /home/jenkins/Navyaraaga/frontend/dist/* /root/Navyaraaga/frontend/
+        echo "📦 Copying new frontend build..."
+        cp -r /home/jenkins/Navyaraaga/frontend/dist/* /home/jenkins/Navyaraaga/served-frontend/
 
-        echo "🚀 Starting frontend using serve on port 4000..."
-        nohup /snap/bin/serve -d /root/Navyaraaga/frontend -l 4000 --no-ssl > /root/Navyaraaga/frontend-logs.txt 2>&1 < /dev/null &
+        echo "🚀 Starting serve on port 4000..."
+        nohup /snap/bin/serve -d /home/jenkins/Navyaraaga/served-frontend -l 4000 --no-ssl > /home/jenkins/Navyaraaga/frontend-logs.txt 2>&1 < /dev/null &
 
         sleep 3
 
-        echo "📡 Running processes:"
-        pgrep -af 'serve' || echo "❗ No serve process found"
+        echo "📡 Checking serve process..."
+        pgrep -af 'serve' || echo "❗ Serve process not running"
 
-        echo "✅ Frontend should now be accessible at http://103.174.102.148:4000"
+        echo "✅ Frontend should now be live at http://103.174.102.148:4000"
       """
     }
   }
 }
+
 
     
 // stage('Start Frontend (serve)') {
